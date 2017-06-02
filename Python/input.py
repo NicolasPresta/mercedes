@@ -16,6 +16,17 @@ FLAGS = tf.app.flags.FLAGS
 
 # ==============================================================================
 
+y_max = 169.91
+y_min = 72.11
+
+
+def escalar_datos(datos):
+    return (datos - y_min) / (y_max - y_min)
+
+
+def rescalar_datos(datos):
+    return (datos * (y_max - y_min)) + y_min
+
 
 def get_inputs():
     data_train = pd.read_csv(FLAGS.dir_data_train)
@@ -30,6 +41,9 @@ def get_inputs():
 
     data_train = pd.get_dummies(data_train, prefix=['X0', 'X1', 'X2', 'X3', 'X4', 'X5', 'X6', 'X8'])
     data_test = pd.get_dummies(data_test, prefix=['X0', 'X1', 'X2', 'X3', 'X4', 'X5', 'X6', 'X8'])
+
+    # Quitamos la anomalia (y > 250)
+    data_train = data_train[data_train['y'] < 250]
 
     # Completamos las columnas que tiene el set de test que no tiene el set de train
     # La completamos con una columna en blanco
@@ -52,16 +66,16 @@ def get_inputs():
 
     # Completamos las columnas que tiene el set de train que no tiene el set de test
     # La completamos con una columna en blanco
-    data_test['X0_aa'] = data_test['X11']
-    data_test['X0_ab'] = data_test['X11']
-    data_test['X0_ac'] = data_test['X11']
-    data_test['X0_q'] = data_test['X11']
-    data_test['X2_aa'] = data_test['X11']
-    data_test['X2_ar'] = data_test['X11']
-    data_test['X2_c'] = data_test['X11']
-    data_test['X2_l'] = data_test['X11']
-    data_test['X2_o'] = data_test['X11']
-    data_test['X5_u'] = data_test['X11']
+    data_test['X0_aa'] = data_train['X11']
+    data_test['X0_ab'] = data_train['X11']
+    data_test['X0_ac'] = data_train['X11']
+    data_test['X0_q'] = data_train['X11']
+    data_test['X2_aa'] = data_train['X11']
+    data_test['X2_ar'] = data_train['X11']
+    data_test['X2_c'] = data_train['X11']
+    data_test['X2_l'] = data_train['X11']
+    data_test['X2_o'] = data_train['X11']
+    data_test['X5_u'] = data_train['X11']
 
     # Dividimos el set de train, dejamos una parte aparte para validación del aprendizaje
     # Nos va a servir para evitar sobreajuste del modelo
@@ -70,10 +84,10 @@ def get_inputs():
     val = data_train[~msk]
 
     x_train = train[train.columns[1:600]]
-    y_train = train[train.columns[0:1]]
+    y_train = escalar_datos(train[train.columns[0:1]])
 
     x_val = val[val.columns[1:600]]
-    y_val = val[val.columns[0:1]]
+    y_val = escalar_datos(val[val.columns[0:1]])
 
     x_test = data_test[data_test.columns[0:600]]
 
