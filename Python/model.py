@@ -15,20 +15,21 @@ FLAGS = tf.app.flags.FLAGS
 
 # ==============================================================================
 
-weights = {
-    'h1': tf.Variable(tf.random_normal([FLAGS.model_n_input, FLAGS.model_n_hidden_1])),
-    'h2': tf.Variable(tf.random_normal([FLAGS.model_n_hidden_1, FLAGS.model_n_hidden_2])),
-    'out': tf.Variable(tf.random_normal([FLAGS.model_n_hidden_2, 1]))
-}
-
-biases = {
-    'b1': tf.Variable(tf.random_normal([FLAGS.model_n_hidden_1])),
-    'b2': tf.Variable(tf.random_normal([FLAGS.model_n_hidden_2])),
-    'out': tf.Variable(tf.random_normal([FLAGS.model_n_classes]))
-}
-
 
 def inference(x):
+
+    weights = {
+        'h1': tf.Variable(tf.random_normal([FLAGS.model_n_input, FLAGS.model_n_hidden_1])),
+        'h2': tf.Variable(tf.random_normal([FLAGS.model_n_hidden_1, FLAGS.model_n_hidden_2])),
+        'out': tf.Variable(tf.random_normal([FLAGS.model_n_hidden_2, 1]))
+    }
+
+    biases = {
+        'b1': tf.Variable(tf.random_normal([FLAGS.model_n_hidden_1])),
+        'b2': tf.Variable(tf.random_normal([FLAGS.model_n_hidden_2])),
+        'out': tf.Variable(tf.random_normal([1]))
+    }
+
     # Hidden layer with sigmoid activation
     layer_1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
     layer_1 = tf.nn.sigmoid(layer_1)
