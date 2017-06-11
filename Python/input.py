@@ -21,19 +21,18 @@ y_min = 72.11
 
 
 def escalar_datos(datos):
-    return (datos - y_min) / (y_max - y_min)
+    return datos
+    #return (datos - y_min) / (y_max - y_min)
 
 
 def rescalar_datos(datos):
-    return (datos * (y_max - y_min)) + y_min
+    return datos
+    #return (datos * (y_max - y_min)) + y_min
 
 
 def get_inputs():
     data_train = pd.read_csv(FLAGS.dir_data_train)
     data_test = pd.read_csv(FLAGS.dir_data_test)
-
-    print("Train data dims:", data_train.shape)
-    print("Test data dims:", data_test.shape)
 
     del data_train['ID']
     id_test = data_test[data_test.columns[0:1]]
@@ -47,6 +46,7 @@ def get_inputs():
 
     # Completamos las columnas que tiene el set de test que no tiene el set de train
     # La completamos con una columna en blanco
+    '''
     data_train['X0_ae'] = data_train['X11']
     data_train['X0_ag'] = data_train['X11']
     data_train['X0_an'] = data_train['X11']
@@ -76,6 +76,34 @@ def get_inputs():
     data_test['X2_l'] = data_train['X11']
     data_test['X2_o'] = data_train['X11']
     data_test['X5_u'] = data_train['X11']
+    '''
+    del data_test['X0_ae']
+    del data_test['X0_ag']
+    del data_test['X0_an']
+    del data_test['X0_av']
+    del data_test['X0_bb']
+    del data_test['X0_p']
+    del data_test['X2_ab']
+    del data_test['X2_ad']
+    del data_test['X2_aj']
+    del data_test['X2_ax']
+    del data_test['X2_u']
+    del data_test['X2_w']
+    del data_test['X5_a']
+    del data_test['X5_b']
+    del data_test['X5_t']
+    del data_test['X5_z']
+
+    del data_train['X0_aa']
+    del data_train['X0_ab']
+    del data_train['X0_ac']
+    del data_train['X0_q']
+    del data_train['X2_aa']
+    del data_train['X2_ar']
+    del data_train['X2_c']
+    del data_train['X2_l']
+    del data_train['X2_o']
+    del data_train['X5_u']
 
     # Dividimos el set de train, dejamos una parte aparte para validación del aprendizaje
     # Nos va a servir para evitar sobreajuste del modelo
